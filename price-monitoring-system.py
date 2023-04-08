@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 
 BASE_URL = "https://books.toscrape.com/"
 MESSAGE_ERROR_URL = "Sorry, but we have encountered a problem with the URL."
-url = "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
-# url = "https://books.toscrape.com/catalogue/tipping-the-velvet_999/index.html"
+# url = "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
+url = "https://books.toscrape.com/catalogue/tipping-the-velvet_999/index.html"
 book_page = requests.get(url)
 # remembrance esto a response
 # print(book_page.content)
@@ -38,6 +38,13 @@ for key in keys:
 #     print(p.get_text(strip = True, separator = "\n"))
 #
 # print(table_with_information)
+def find_url_image(soup_response):
+    relative_url = soup_response.find("img")["src"]
+    if relative_url.startswith("../../"):
+        complete_url = relative_url.replace("../..", BASE_URL)
+        return complete_url
+
+
 def find_rating_review(soup_response):
     rating = " / Five"
     find_review = soup_response.select_one(".star-rating")
@@ -112,6 +119,7 @@ def get_information_book(url_to_download):
         information_book.append(get_description_book(soup_t))
         information_book.append(find_category_book(soup_t))
         information_book.append(find_rating_review(soup_t))
+        information_book.append(find_url_image(soup_t))
     return information_book
 
 
