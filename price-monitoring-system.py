@@ -38,6 +38,13 @@ for key in keys:
 #     print(p.get_text(strip = True, separator = "\n"))
 #
 # print(table_with_information)
+def find_rating_review(soup_response):
+    rating = " / Five"
+    find_review = soup_response.select_one(".star-rating")
+    # print(find_review.attrs.get("class")[1])
+    return find_review.attrs.get("class")[1] + rating
+
+
 def find_category_book(soup_response):
     list_of_links = soup_response.find("ul", class_ = "breadcrumb").find_all("a")
     category = "Not found"
@@ -103,6 +110,8 @@ def get_information_book(url_to_download):
         information_book.append(table_t["Price (excl. tax)"])
         information_book.append(table_t["Availability"])
         information_book.append(get_description_book(soup_t))
+        information_book.append(find_category_book(soup_t))
+        information_book.append(find_rating_review(soup_t))
     return information_book
 
 
@@ -120,6 +129,7 @@ print("Product description = ", description_book)
 # print(get_table_information(soup))
 print(get_information_book(url))
 print(find_category_book(soup))
+print(find_rating_review(soup))
 # print(category["href"])
 # write_header()
 
