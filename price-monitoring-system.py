@@ -4,40 +4,9 @@ from bs4 import BeautifulSoup
 
 BASE_URL = "https://books.toscrape.com/"
 MESSAGE_ERROR_URL = "Sorry, but we have encountered a problem with the URL."
-# url = "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
 url = "https://books.toscrape.com/catalogue/tipping-the-velvet_999/index.html"
-book_page = requests.get(url)
-# remembrance esto a response
-# print(book_page.content)
-soup = BeautifulSoup(book_page.content, "html.parser")
-title_book = soup.find("h1").string
-# description_book = soup.find(id = "product_description", class_ = "sub-header")
-# universal_product_code = soup.find("th")
-image_url = soup.find("img")["src"]
-# table_with_information = soup.find(class_ = "table")
-keys = soup.find("table", class_ = "table").findAll("th")
-values = soup.find("table", class_ = "table").findAll("td")
-test_dictionary = {}
-# category = soup.find("ul", class_ = "breadcrumb").find_all("a")
-# category = soup.find("ul", class_ = "breadcrumb").find("a")
-
-for key in keys:
-    for value in values:
-        test_dictionary[key.string] = value.string
-        values.remove(value)
-        break
-
-# print(test_dictionary)
-
-# for value in values:
-#     print(value.string)
 
 
-# product_description = soup.find(id="product_description")
-# for p in soup.select("p"):
-#     print(p.get_text(strip = True, separator = "\n"))
-#
-# print(table_with_information)
 def find_url_image(soup_response):
     relative_url = soup_response.find("img")["src"]
     if relative_url.startswith("../../"):
@@ -123,35 +92,15 @@ def get_information_book(url_to_download):
     return information_book
 
 
-def has_class_but_no_id(tag):
-    return not tag.has_attr('class') and not tag.has_attr('id')
+def add_book_information(information_book):
+    with open("test_file.cvs", "a") as file_cvs:
+        writer = csv.writer(file_cvs, delimiter = ",")
+        writer.writerow(information_book)
 
 
-description_book = soup.find("article", class_ = "product_page").find("p", recursive = False).string
-absolute_url = create_absolute_url(image_url)
+# print(get_information_book(url))
+write_header()
+add_book_information(get_information_book(url))
 
-print("Title book = ", title_book)
-# print("UPC book = ", universal_product_code)
-print("URL image = ", absolute_url)
-print("Product description = ", description_book)
-# print(get_table_information(soup))
-print(get_information_book(url))
-print(find_category_book(soup))
-print(find_rating_review(soup))
-# print(category["href"])
-# write_header()
-
-# print("URL image = ", image_url["src"])
-# print(soup.find_all("h1"))
-# print(soup.title.string)
-# lista de campos a buscar:
-#  product_page_url
-# ● universal_ product_code (upc)
-# ● title
-# ● price_including_tax
-# ● price_excluding_tax
-# ● number_available
-# ● product_description
-# ● category
-# ● review_rating
-# ● image_url
+for i in get_information_book(url):
+    print(i)
