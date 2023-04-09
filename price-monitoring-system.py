@@ -98,9 +98,17 @@ def add_book_information(information_book):
         writer.writerow(information_book)
 
 
-# print(get_information_book(url))
-write_header()
-add_book_information(get_information_book(url))
+url_category = "https://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
 
-for i in get_information_book(url):
-    print(i)
+
+def test_find_all_books_category_url(test_url_category):
+    links = []
+    test_response_category = requests.get(test_url_category)
+    if test_response_category.status_code:
+        test_soup_category = BeautifulSoup(test_response_category.content, "html.parser")
+        for i in test_soup_category.find_all("h3"):
+            print(i.find("a")["href"])
+            links.append(i.find("a")["href"])
+    print(len(links))
+
+test_find_all_books_category_url(url_category)
