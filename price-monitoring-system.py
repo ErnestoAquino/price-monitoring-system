@@ -98,6 +98,7 @@ def add_book_information(information_book):
         writer.writerow(information_book)
 
 
+# Test functions to retrieve books from a category
 url_category = "https://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
 
 
@@ -107,8 +108,22 @@ def test_find_all_books_category_url(test_url_category):
     if test_response_category.status_code:
         test_soup_category = BeautifulSoup(test_response_category.content, "html.parser")
         for i in test_soup_category.find_all("h3"):
-            print(i.find("a")["href"])
+            # print(i.find("a")["href"])
             links.append(i.find("a")["href"])
-    print(len(links))
+    return test_create_absolutes_urls(links)
 
-test_find_all_books_category_url(url_category)
+
+def test_create_absolutes_urls(links):
+    test_base_url = "https://books.toscrape.com/catalogue"
+    complete_links = []
+    for link in links:
+        complete_links.append(link.replace("../../..", test_base_url))
+    return complete_links
+
+
+def test_get_all_books_of_one_page(links):
+    for link in links:
+        add_book_information(get_information_book(link))
+
+
+test_get_all_books_of_one_page(test_find_all_books_category_url(url_category))
