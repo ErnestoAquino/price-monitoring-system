@@ -63,7 +63,7 @@ def write_header():
         "review_rating",
         "image_url"
     ]
-    with open("test_file.cvs", "w") as test_file:
+    with open("test_file.csv", "w") as test_file:
         write = csv.writer(test_file, delimiter = ",")
         write.writerow(header)
 
@@ -93,8 +93,8 @@ def get_information_book(url_to_download):
 
 
 def add_book_information(information_book):
-    with open("test_file.cvs", "a") as file_cvs:
-        writer = csv.writer(file_cvs, delimiter = ",")
+    with open("test_file.csv", "a") as file_csv:
+        writer = csv.writer(file_csv, delimiter = ",")
         writer.writerow(information_book)
 
 
@@ -126,4 +126,5 @@ def test_get_all_books_of_one_page(links):
         add_book_information(get_information_book(link))
 
 
+write_header()
 test_get_all_books_of_one_page(test_find_all_books_category_url(url_category))
