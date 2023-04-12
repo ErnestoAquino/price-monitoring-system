@@ -69,8 +69,10 @@ def write_header(category):
 
 
 def get_description_book(s):
-    d_book = s.find("article", class_ = "product_page").find("p", recursive = False).string
-    return d_book
+    description_book = "NOT FOUND DESCRIPTION"
+    if s.find("article", class_ = "product_page").find("p", recursive = False):
+        description_book = s.find("article", class_ = "product_page").find("p", recursive = False).string
+    return description_book
 
 
 def get_information_book(url_to_download):
@@ -92,8 +94,8 @@ def get_information_book(url_to_download):
     return information_book
 
 
-def add_book_information(information_book):
-    with open("test_file.csv", "a") as file_csv:
+def add_book_information(information_book, category):
+    with open(category + ".csv", "a") as file_csv:
         writer = csv.writer(file_csv, delimiter = ",")
         writer.writerow(information_book)
 
@@ -102,16 +104,28 @@ def add_book_information(information_book):
 url_category = "https://books.toscrape.com/catalogue/category/books/mystery_3/index.html"
 
 
-def test_find_all_books_category_url(test_url_category):
+# def test_find_all_books_category_url(test_url_category):
+#     links = []
+#     test_response_category = requests.get(test_url_category)
+#     if test_response_category.status_code:
+#         test_soup_category = BeautifulSoup(test_response_category.content, "html.parser")
+#         # if test_soup_category.find("li", class_ = "next").find("a")["href"]:
+#         #     print("hay link next")
+#         for i in test_soup_category.find_all("h3"):
+#             # print(i.find("a")["href"])
+#             links.append(i.find("a")["href"])
+#     return test_create_absolutes_urls(links)
+def test_find_all_books_category_url(urls_of_category):
     links = []
-    test_response_category = requests.get(test_url_category)
-    if test_response_category.status_code:
-        test_soup_category = BeautifulSoup(test_response_category.content, "html.parser")
-        # if test_soup_category.find("li", class_ = "next").find("a")["href"]:
-        #     print("hay link next")
-        for i in test_soup_category.find_all("h3"):
-            # print(i.find("a")["href"])
-            links.append(i.find("a")["href"])
+    for url in urls_of_category:
+        test_response_category = requests.get(url)
+        if test_response_category.status_code:
+            test_soup_category = BeautifulSoup(test_response_category.content, "html.parser")
+            # if test_soup_category.find("li", class_ = "next").find("a")["href"]:
+            #     print("hay link next")
+            for i in test_soup_category.find_all("h3"):
+                # print(i.find("a")["href"])
+                links.append(i.find("a")["href"])
     return test_create_absolutes_urls(links)
 
 
@@ -123,9 +137,9 @@ def test_create_absolutes_urls(links):
     return complete_links
 
 
-def test_get_all_books_of_one_page(links):
+def test_get_all_books_of_one_page(links, category):
     for link in links:
-        add_book_information(get_information_book(link))
+        add_book_information(get_information_book(link), category)
 
 
 def find_all_books_of(category):
@@ -146,5 +160,7 @@ def find_all_books_of(category):
     return urls
 
 
-print(find_all_books_of("sequential-art_5"))
-write_header("Sequential Art")
+urls_para_descargar = (find_all_books_of("classics_6"))
+libros = test_find_all_books_category_url(urls_para_descargar)
+write_header("classics_6")
+test_get_all_books_of_one_page(libros, "classics_6")
