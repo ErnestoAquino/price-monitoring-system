@@ -27,10 +27,10 @@ def find_category_book(soup_response):
     return category
 
 
-def get_description_book(s):
+def get_description_book(soup_response):
     description_book = "NOT FOUND DESCRIPTION"
-    if s.find("article", class_ = "product_page").find("p", recursive = False):
-        description_book = s.find("article", class_ = "product_page").find("p", recursive = False).string
+    if soup_response.find("article", class_ = "product_page").find("p", recursive = False):
+        description_book = soup_response.find("article", class_ = "product_page").find("p", recursive = False).string
     return description_book
 
 
