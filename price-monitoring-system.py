@@ -107,6 +107,8 @@ def test_find_all_books_category_url(test_url_category):
     test_response_category = requests.get(test_url_category)
     if test_response_category.status_code:
         test_soup_category = BeautifulSoup(test_response_category.content, "html.parser")
+        # if test_soup_category.find("li", class_ = "next").find("a")["href"]:
+        #     print("hay link next")
         for i in test_soup_category.find_all("h3"):
             # print(i.find("a")["href"])
             links.append(i.find("a")["href"])
@@ -126,5 +128,22 @@ def test_get_all_books_of_one_page(links):
         add_book_information(get_information_book(link))
 
 
-write_header()
-test_get_all_books_of_one_page(test_find_all_books_category_url(url_category))
+def find_all_books_of(category):
+    index_page = "/index.html"
+    url_complete = "https://books.toscrape.com/catalogue/category/books/" + category + index_page
+    are_more_books = True
+    urls = [url_complete]
+    while are_more_books:
+        response = requests.get(url_complete)
+        if response.status_code:
+            soup = BeautifulSoup(response.content, "html.parser")
+            if soup.find("li", class_ = "next"):
+                index_page = "/" + soup.find("li", class_ = "next").find("a")["href"]
+                url_complete = "https://books.toscrape.com/catalogue/category/books/" + category + index_page
+                urls.append(url_complete)
+            else:
+                are_more_books = False
+    return urls
+
+
+print(find_all_books_of("sequential-art_5"))
