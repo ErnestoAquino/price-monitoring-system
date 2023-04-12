@@ -50,7 +50,7 @@ def create_absolute_url(relative_url):
         return MESSAGE_ERROR_URL
 
 
-def write_header():
+def write_header(category):
     header = [
         "product_page_url",
         "universal_ product_code (upc)",
@@ -63,8 +63,8 @@ def write_header():
         "review_rating",
         "image_url"
     ]
-    with open("test_file.csv", "w") as test_file:
-        write = csv.writer(test_file, delimiter = ",")
+    with open(category + ".csv", "w") as file:
+        write = csv.writer(file, delimiter = ",")
         write.writerow(header)
 
 
@@ -147,3 +147,4 @@ def find_all_books_of(category):
 
 
 print(find_all_books_of("sequential-art_5"))
+write_header("Sequential Art")
