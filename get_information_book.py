@@ -14,7 +14,6 @@ def find_url_image(soup_response):
 def find_rating_review(soup_response):
     rating = " / Five"
     find_review = soup_response.select_one(".star-rating")
-    # print(find_review.attrs.get("class")[1])
     return find_review.attrs.get("class")[1] + rating
 
 
@@ -36,12 +35,12 @@ def get_description_book(soup_response):
 
 def get_table_information(soup_response):
     table_information = {}
-    keys_t = soup_response.find("table", class_ = "table").findAll("th")
-    values_t = soup_response.find("table", class_ = "table").findAll("td")
-    for key_t in keys_t:
-        for value_t in values_t:
-            table_information[key_t.string] = value_t.string
-            values_t.remove(value_t)
+    keys = soup_response.find("table", class_ = "table").findAll("th")
+    values = soup_response.find("table", class_ = "table").findAll("td")
+    for key in keys:
+        for value in values:
+            table_information[key.string] = value.string
+            values.remove(value)
             break
     return table_information
 
@@ -50,16 +49,16 @@ def get_information_book(url_to_download):
     information_book = []
     response = requests.get(url_to_download)
     if response.ok:
-        soup_t = BeautifulSoup(response.content, "html.parser")
-        table_t = get_table_information(soup_t)
+        soup = BeautifulSoup(response.content, "html.parser")
+        table_information = get_table_information(soup)
         information_book.append(url_to_download)
-        information_book.append(table_t["UPC"])
-        information_book.append(soup_t.find("h1").string)
-        information_book.append(table_t["Price (incl. tax)"])
-        information_book.append(table_t["Price (excl. tax)"])
-        information_book.append(table_t["Availability"])
-        information_book.append(get_description_book(soup_t))
-        information_book.append(find_category_book(soup_t))
-        information_book.append(find_rating_review(soup_t))
-        information_book.append(find_url_image(soup_t))
+        information_book.append(table_information["UPC"])
+        information_book.append(soup.find("h1").string)
+        information_book.append(table_information["Price (incl. tax)"])
+        information_book.append(table_information["Price (excl. tax)"])
+        information_book.append(table_information["Availability"])
+        information_book.append(get_description_book(soup))
+        information_book.append(find_category_book(soup))
+        information_book.append(find_rating_review(soup))
+        information_book.append(find_url_image(soup))
     return information_book
