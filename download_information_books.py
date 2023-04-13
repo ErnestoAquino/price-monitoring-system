@@ -6,7 +6,9 @@ from get_information_book import get_information_book
 
 def download_information_book_of(category):
     write_header(category)
-    find_all_pages_of(category)
+    pages_of_category = find_all_pages_of(category)
+    links_of_books = find_all_links_books_category(pages_of_category)
+    get_books_from_links(links_of_books, category)
 
 
 def write_header(category):
@@ -42,10 +44,13 @@ def find_all_pages_of(category):
                 urls.append(url_complete)
             else:
                 are_more_books = False
-    find_all_links_books_category(urls, category)
+        else:
+            are_more_books = False
+    return urls
+    # find_all_links_books_category(urls, category)
 
 
-def find_all_links_books_category(urls_of_category, category):
+def find_all_links_books_category(urls_of_category):
     links = []
     for url in urls_of_category:
         test_response_category = requests.get(url)
@@ -55,8 +60,8 @@ def find_all_links_books_category(urls_of_category, category):
             #     print("hay link next")
             for i in test_soup_category.find_all("h3"):
                 links.append(i.find("a")["href"])
-    completes_links = create_absolutes_urls(links)
-    get_books_from_links(completes_links, category)
+    return create_absolutes_urls(links)
+    # get_books_from_links(completes_links, category)
 
 
 def create_absolutes_urls(links):
