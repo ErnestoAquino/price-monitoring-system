@@ -1,5 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
+from os.path import isdir
+from os import mkdir
+
 
 BASE_URL = "https://books.toscrape.com/"
 
@@ -53,12 +56,34 @@ def get_information_book(url_to_download):
         table_information = get_table_information(soup)
         information_book.append(url_to_download)
         information_book.append(table_information["UPC"])
-        information_book.append(soup.find("h1").string)
+        title = soup.find("h1").string
+        # information_book.append(soup.find("h1").string)
+        information_book.append(title)
         information_book.append(table_information["Price (incl. tax)"])
         information_book.append(table_information["Price (excl. tax)"])
         information_book.append(table_information["Availability"])
         information_book.append(get_description_book(soup))
-        information_book.append(find_category_book(soup))
+        category = find_category_book(soup)
+        # information_book.append(find_category_book(soup))
+        information_book.append(category)
         information_book.append(find_rating_review(soup))
-        information_book.append(find_url_image(soup))
+        url_image = find_url_image(soup)
+        information_book.append(url_image)
+        # information_book.append(find_url_image(soup))
+        download_image(category, title, url_image)
+
     return information_book
+
+
+def download_image(category_book, title_book, url_image):
+    path_image = "images/" + category_book
+    name_image = title_book.replace("/", " ")
+    print(name_image)
+    png = "./images/" + category_book + "/" + name_image + ".png"
+    print(png)
+    if not isdir("images"):
+        mkdir("images")
+    if not isdir(path_image):
+        mkdir(path_image)
+    with open(png, "wb") as file:
+        file.write(requests.get(url_image, stream = True).content)
