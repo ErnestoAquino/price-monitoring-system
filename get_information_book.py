@@ -10,7 +10,7 @@ BASE_URL = "https://books.toscrape.com/"
 def find_url_image(soup_response):
     relative_url = soup_response.find("img")["src"]
     if relative_url.startswith("../../"):
-        complete_url = relative_url.replace("../..", BASE_URL)
+        complete_url = relative_url.replace("../../", BASE_URL)
         return complete_url
 
 
