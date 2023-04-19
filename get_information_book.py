@@ -57,19 +57,16 @@ def get_information_book(url_to_download):
         information_book.append(url_to_download)
         information_book.append(table_information["UPC"])
         title = soup.find("h1").string
-        # information_book.append(soup.find("h1").string)
         information_book.append(title)
         information_book.append(table_information["Price (incl. tax)"])
         information_book.append(table_information["Price (excl. tax)"])
         information_book.append(table_information["Availability"])
         information_book.append(get_description_book(soup))
         category = find_category_book(soup)
-        # information_book.append(find_category_book(soup))
         information_book.append(category)
         information_book.append(find_rating_review(soup))
         url_image = find_url_image(soup)
         information_book.append(url_image)
-        # information_book.append(find_url_image(soup))
         download_image(category, title, url_image)
 
     return information_book
