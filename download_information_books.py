@@ -3,8 +3,6 @@ import csv
 from datetime import date
 from bs4 import BeautifulSoup
 from get_information_book import get_information_book
-from os.path import isdir
-from os import mkdir
 
 
 def download_information():
@@ -89,24 +87,9 @@ def get_books_from_links(links, file_name):
     for link in links:
         information = get_information_book(link)
         add_book_information(information, file_name)
-        # download_image(information)
 
 
 def add_book_information(information_book, file_name):
     with open(file_name + ".csv", "a") as file_csv:
         writer = csv.writer(file_csv, delimiter = ",")
         writer.writerow(information_book)
-
-
-def download_image(information_book):
-    path_image = "images/" + information_book[7]
-    name_image = information_book[2].replace("/", " ")
-    print(name_image)
-    png = "./images/" + information_book[7] + "/" + name_image + ".png"
-    print(png)
-    if not isdir("images"):
-        mkdir("images")
-    if not isdir(path_image):
-        mkdir(path_image)
-    with open(png, "wb") as file:
-        file.write(requests.get(information_book[9], stream = True).content)
